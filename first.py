@@ -1,11 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/flask-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost:5432/flask-blog'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class BlogPost(db.Model):
@@ -28,6 +30,13 @@ def post():
     return render_template('post.html')
 
 
+@app.route('/blog/<int:blog_id>')
+def blog(blog_id):
+    blog = BlogPost.query.filter_by(id=blog_id).one()
+
+    return render_template('post.html', blog=blog)
+
+
 @app.route('/about')
 def about():
     return render_template('about.html')
@@ -36,6 +45,26 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+
+@app.route('/addBlog')
+def add_blog():
+    return render_template('add_blog.html')
+
+
+@app.route('/store_blog', methods=['POST'])
+def store_blog():
+    title = request.form['title']
+    subtitle = request.form['subtitle']
+    author = request.form['author']
+    date_posted = request.form['date_posted']
+    content = request.form['content']
+
+    post = BlogPost(title=title, subtitle='subtitle', author='author', date_posted=date_posted, content=content)
+    db.session.add(post)
+    db.session.commit()
+
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
