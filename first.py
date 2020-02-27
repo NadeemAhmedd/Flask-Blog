@@ -1,5 +1,20 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/flask-blog'
+
+db = SQLAlchemy(app)
+
+
+class BlogPost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50))
+    subtitle = db.Column(db.String(50))
+    author = db.Column(db.String(30))
+    date_posted = db.Column(db.DateTime)
+    content = db.Column(db.Text)
 
 
 @app.route('/')
@@ -23,5 +38,6 @@ def contact():
     return render_template('contact.html')
 
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
 
