@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import datetime
 
 app = Flask(__name__)
 
@@ -21,8 +22,8 @@ class BlogPost(db.Model):
 
 @app.route('/')
 def index():
-
-    return render_template('index.html')
+    blogs = BlogPost.query.order_by(BlogPost.id.desc()).all()
+    return render_template('index.html', blogs=blogs)
 
 
 @app.route('/post')
@@ -33,8 +34,9 @@ def post():
 @app.route('/blog/<int:blog_id>')
 def blog(blog_id):
     blog = BlogPost.query.filter_by(id=blog_id).one()
+    date_posted = blog.date_posted.strftime('%B %d, %Y')
 
-    return render_template('post.html', blog=blog)
+    return render_template('post.html', blog=blog, date_posted=date_posted)
 
 
 @app.route('/about')
@@ -60,7 +62,7 @@ def store_blog():
     date_posted = request.form['date_posted']
     content = request.form['content']
 
-    post = BlogPost(title=title, subtitle='subtitle', author='author', date_posted=date_posted, content=content)
+    post = BlogPost(title=title, subtitle=subtitle, author=author, date_posted=date_posted, content=content)
     db.session.add(post)
     db.session.commit()
 
