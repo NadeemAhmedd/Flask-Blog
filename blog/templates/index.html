@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block pagehead %}
+<header class="masthead" style="background-image: url(' {{ url_for('static', filename='img/home-bg.jpg') }} ')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Clean Blog</h1>
+            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        <div class="post-preview">
+          <a href="#">
+            <h2 class="post-title">
+              Title
+            </h2>
+            <h3 class="post-subtitle">
+             subtitle
+            </h3>
+          </a>
+          <p class="post-meta">Posted by
+            <a href="#">author</a>
+            on august 02, 1994</p>
+        </div>
+        <hr>
+
+        <!-- Pager -->
+        <div class="clearfix">
+          <a class="btn btn-primary float-right" href="#">Older Posts &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+{% endblock %}
